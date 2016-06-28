@@ -1,0 +1,17 @@
+[package]
+name = "segment_analytics"
+version = "0.1.1"
+authors = ["Alexis Agahi <aagahi@prefetch.com>"]
+license = "MIT/Apache-2.0"
+readme = "Readme.md"
+repository = "https://github.com/aagahi/rust-segment-analytics"
+homepage = "https://github.com/aagahi/rust-segment-analytics"
+documentation = "https://github.com/aagahi/rust-segment-analytics"
+description = """
+Segment Analytics (segment.com) client for rust ;)
+"""
+
+
+[dependencies]
+hyper = "0.9.5"
+time = "0.1.35"

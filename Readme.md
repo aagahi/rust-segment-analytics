@@ -1,4 +1,4 @@
-Rust Sentry Lib
+Rust Segment Analytics Client
 ==========
 
 [![Build Status](https://travis-ci.org/aagahi/rust-segment-analytics.svg?branch=master)](https://travis-ci.org/aagahi/rust-segment-analytics)

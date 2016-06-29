@@ -69,7 +69,7 @@ Traits, Properties and Context must implement `ToJsonString` (I'm not a fan of c
 pub trait ToJsonString {
     fn to_json_string(&self) -> String;
 }
-```rust
+```
 
 For convenience `ToJsonString` is (basically) implemented for `HashMap`.
 

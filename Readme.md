@@ -15,7 +15,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-segment_analytics = "0.1.1"
+segment_analytics = "0.1.2"
 ```
 
 and this to your crate root:

@@ -264,13 +264,13 @@ impl Segment {
 
         let mut body = String::new();
         body.push_str("{");
-        body.push_str(&format!("\"event\":\"{}\",", event));
+        body.push_str(&format!("\"event\":\"{}\"", event));
 
         if let Some(anonymous_id) = anonymous_id {
             body.push_str(&format!(",\"anonymousId\":\"{}\"", anonymous_id));
         }
         if let Some(user_id) = user_id {
-            body.push_str(&format!(",\"userId\":\"{}\",", user_id));
+            body.push_str(&format!(",\"userId\":\"{}\"", user_id));
         }
         if let Some(properties) = properties {
             body.push_str(&format!(",\"properties\":{}", properties.to_json_string()));

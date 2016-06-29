@@ -26,6 +26,54 @@ extern crate segment_analytics;
 
 ## Examples
 
+Usage with shared instance across thread.
+
+```rust
+extern crate segment_analytics;
+use segment_analytics::Segment;
+
+let segment = Arc::new(Segment::new(Some(SEGMENT_WRITE_KEY.to_string())));
+
+let segment1 = segment.clone();
+thread::spawn(move || {
+
+  let mut properties = HashMap::new();
+  properties.insert("firstname", "Jimmy");
+  properties.insert("lastname", "Page");
+
+  let mut context = HashMap::new();
+  context.insert("ip", "134.157.15.3");
+
+  segment1.track(Some("anonymous_id"),
+                 None,
+                 "EventName",
+                 Some(properties),
+                 Some(context))
+
+  segment1.alias("anonymous_id", "user_id");
+
+  let mut traits = HashMap::new();
+  traits.insert("email", "bill@gates.com");
+  let mut context = HashMap::new();
+  context.insert("ip", "134.157.15.3");
+  segment1.identify(None,Some("user_id"), None, Some(traits), Some(context));
+});
+```
+
+Under the hood, one thread worker is in charge of sending the messages to segment endpoint. If the thread drops, a new one is created.
+
+
+Traits, Properties and Context must implement `ToJsonString` (I'm not a fan of current json solutions in rust).
+
+```rust
+pub trait ToJsonString {
+    fn to_json_string(&self) -> String;
+}
+```rust
+
+For convenience `ToJsonString` is (basically) implemented for `HashMap`.
+
+
 
 ## License
 

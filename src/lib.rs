@@ -296,6 +296,7 @@ mod tests {
     use std::time::Duration;
     use std::sync::Arc;
 
+    // Segment Test Key - do not abuse of it ;)
     static SEGMENT_WRITE_KEY: &'static str = "okSiXGEgvMbIOjlmQFDq034TJIfnomu6";
 
 
@@ -303,6 +304,8 @@ mod tests {
     fn it_should_send_alias_message() {
         let segment = ::Segment::new(Some(SEGMENT_WRITE_KEY.to_string()));
         segment.alias("previous_id", "user_id");
+
+        // yeah I know ;)
         thread::sleep(Duration::new(5, 0));
     }
 
@@ -313,8 +316,9 @@ mod tests {
         let mut context = HashMap::new();
         context.insert("ip", "134.157.15.3");
         segment.identify(Some("anonymous_id"), None, None::<String>, Some(context));
-        thread::sleep(Duration::new(5, 0));
 
+        // yeah I know ;)
+        thread::sleep(Duration::new(5, 0));
     }
 
     #[test]
@@ -329,6 +333,8 @@ mod tests {
                       "Test Event",
                       Some(properties),
                       None::<String>);
+
+        // yeah I know ;)
         thread::sleep(Duration::new(5, 0));
 
     }
@@ -360,7 +366,7 @@ mod tests {
         let _ = t1.join().unwrap();
         let _ = t2.join().unwrap();
 
-
+        // yeah I know ;)
         thread::sleep(Duration::new(5, 0));
 
     }

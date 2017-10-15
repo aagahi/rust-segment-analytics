@@ -1,19 +1,27 @@
-extern crate time;
+// extern crate time;
 
 use std::thread;
 use std::sync::mpsc::{channel, Sender, Receiver};
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::fmt::Debug;
-use std::time::Duration;
+// use std::time::Duration;
 use std::fmt::Display;
 use std::collections::HashMap;
 
-#[macro_use]
+extern crate futures;
+use futures::Future;
+
 extern crate hyper;
 use hyper::Client;
-use hyper::header::{Headers, Authorization, Basic, ContentType};
+use hyper::{Method, Request};
+use hyper::header::{Authorization, Basic, ContentType};
 
+extern crate hyper_tls;
+use hyper_tls::HttpsConnector;
+
+extern crate tokio_core;
+use tokio_core::reactor::Core;
 
 
 
@@ -164,36 +172,44 @@ impl Segment {
     fn post(write_key: &Option<String>, query: &SegmentQuery) {
         if let Some(key) = write_key.clone() {
 
-            let mut headers = Headers::new();
-            headers.set(Authorization(Basic {
+            // let mut headers = Headers::new();
+            // headers.set();
+            // headers.set(ContentType::json());
+
+            let core = Core::new().unwrap();
+            let handle = core.handle();
+            let http_conn = HttpsConnector::new(4, &handle).unwrap();
+            let client = Client::configure()
+                .connector(http_conn)
+                .build(&handle);
+
+
+            // client.set_read_timeout(Some(Duration::new(5, 0)));
+            // client.set_write_timeout(Some(Duration::new(5, 0)));
+
+            let url = (&query.url).parse::<hyper::Uri>().unwrap();
+            let mut req = Request::new(Method::Post, url);
+            req.headers_mut().set(ContentType::json());
+            req.headers_mut().set(Authorization(Basic {
                 username: key.clone(),
                 password: None,
             }));
-            headers.set(ContentType::json());
 
-            let mut client = Client::new();
-            client.set_read_timeout(Some(Duration::new(5, 0)));
-            client.set_write_timeout(Some(Duration::new(5, 0)));
-
-            match client.post(&query.url)
-                .headers(headers)
-                .body(&query.body)
-                .send() {
+            match client.request(req).wait() {
                 Ok(response) => {
-                    if response.status != hyper::Ok {
+                    if response.status() != hyper::Ok {
                         println!("ERROR: Segment service returned error code {} for query {:?}",
-                                 response.status,
-                                 query);
+                                    response.status(),
+                                    query);
                     }
-                }
+                },
                 Err(err) => {
                     println!("ERROR: fail to post segment query {:?} - Error {}",
                              query,
                              err);
                 }
 
-            }
-
+            };
 
 
         }
